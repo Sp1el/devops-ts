@@ -29,3 +29,30 @@
 - sudo ufw enable - активация firewall
 - sudo ufw status verbose - проверка статуса
 
+## Настройка HTTPS (SSL)
+- sudo mkdir /etc/nginx/ssl - Создание директории для сертификатов
+
+Генерация самоподписанного сертификата:
+- sudo openssl req -x509 -nodes -days 365 \
+  -newkey rsa:2048 \
+  -keyout /etc/nginx/ssl/nginx.key \
+  -out /etc/nginx/ssl/nginx.crt
+
+Добавляем server блок на 443 порт в конфигурации nginx:
+server {
+    listen 443 ssl;
+    server_name localhost;
+
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
+    }
+}
+- sudo nginx -t - проверка синтаксиса
+
+Перезапускаем nginx: sudo systemctl restart nginx
+Проверяем: curl -k https://localhost
+
