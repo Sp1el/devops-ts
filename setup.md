@@ -1,44 +1,112 @@
 # Setup
 
-## Обновление пакетов
-- sudo apt update
+## Обновление системы
+
+```bash
+sudo apt update
+```
+
+---
 
 ## Установка nginx
-- sudo apt install nginx -y (1.24.0)
 
-## Проверка статуса nginx/команды
-- systemctl status nginx - проверка статуса
-- sudo systemctl start nginx - запуск
-- sudo systemctl stop nginx - остановка
-- sudo systemctl restart nginx - перезапуск
-- nginx -v - проверка версии
+```bash
+sudo apt install nginx -y
+```
 
-## Копирование страницы
-- sudo cp ~/devops-ts/nginx/index.html /корневой путь nginx, у меня это usr/share/nginx/html/index.html
-- Посмотреть можно командой cat /etc/nginx/conf.d/default.conf (строка root)
+Проверка версии:
 
-## Перезапуск nginx и проверка ответа сервера
-- sudo systemctl restart nginx
-- curl http://localhost
+```bash
+nginx -v
+```
 
-## Настройка firewall
-- sudo apt install ufw -y - установка ufw (удобный инструмент для работы в ubuntu)
-- sudo ufw allow 22/tcp - добавляем в список правил разрешенный порт (SSH)
-- sudo ufw allow 80/tcp - добавляем в список правил порт (HTTP)
-- sudo ufw allow 443/tcp - добавляем в список правил порт (HTTPS)
-- sudo ufw enable - активация firewall
-- sudo ufw status verbose - проверка статуса
+---
+
+## Управление nginx
+
+```bash
+sudo systemctl status nginx   # проверка статуса
+sudo systemctl start nginx    # запуск
+sudo systemctl stop nginx     # остановка
+sudo systemctl restart nginx  # перезапуск
+```
+
+---
+
+## Настройка статической страницы
+
+Создание файла:
+
+```bash
+nano ~/devops-ts/nginx/index.html
+```
+
+Копирование в директорию nginx:
+
+```bash
+sudo cp ~/devops-ts/nginx/index.html /usr/share/nginx/html/index.html
+```
+
+---
+
+## Проверка работы сервера
+
+```bash
+curl http://localhost
+```
+
+---
+
+## Настройка firewall (ufw)
+
+Установка:
+
+```bash
+sudo apt install ufw -y
+```
+
+Разрешаем порты:
+
+```bash
+sudo ufw allow 22/tcp   # SSH
+sudo ufw allow 80/tcp   # HTTP
+sudo ufw allow 443/tcp  # HTTPS
+```
+
+Включение:
+
+```bash
+sudo ufw enable
+```
+
+Проверка:
+
+```bash
+sudo ufw status verbose
+```
+
+---
 
 ## Настройка HTTPS (SSL)
-- sudo mkdir /etc/nginx/ssl - Создание директории для сертификатов
+
+Создание директории:
+
+```bash
+sudo mkdir /etc/nginx/ssl
+```
 
 Генерация самоподписанного сертификата:
-- sudo openssl req -x509 -nodes -days 365 \
-  -newkey rsa:2048 \
-  -keyout /etc/nginx/ssl/nginx.key \
-  -out /etc/nginx/ssl/nginx.crt
 
-Добавляем server блок на 443 порт в конфигурации nginx:
+```bash
+sudo openssl req -x509 -nodes -days 365 \
+-newkey rsa:2048 \
+-keyout /etc/nginx/ssl/nginx.key \
+-out /etc/nginx/ssl/nginx.crt
+```
+
+Добавление server блока в конфигурацию nginx:
+
+```nginx
 server {
     listen 443 ssl;
     server_name localhost;
@@ -51,8 +119,70 @@ server {
         index index.html;
     }
 }
-- sudo nginx -t - проверка синтаксиса
+```
 
-Перезапускаем nginx: sudo systemctl restart nginx
-Проверяем: curl -k https://localhost
+Проверка конфигурации:
 
+```bash
+sudo nginx -t
+```
+
+Перезапуск nginx:
+
+```bash
+sudo systemctl restart nginx
+```
+
+Проверка HTTPS:
+
+```bash
+curl -k https://localhost
+```
+
+Примечание: флаг `-k` используется, так как сертификат самоподписанный и не доверяется системой.
+
+---
+
+## Генерация времени на странице
+
+Создание скрипта:
+
+```bash
+nano ~/devops-ts/nginx/update_time.sh
+```
+
+Содержимое:
+
+```bash
+#!/bin/bash
+
+TIME=$(date)
+
+echo "<html>
+<head>
+<meta charset=\"UTF-8\">
+</head>
+<body>
+<h1>Hello DevOps world!</h1>
+<p>Current time: $TIME</p>
+</body>
+</html>" > /usr/share/nginx/html/index.html
+```
+
+Делаем исполняемым:
+
+```bash
+chmod +x ~/devops-ts/nginx/update_time.sh
+```
+
+Запуск:
+
+```bash
+sudo ~/devops-ts/nginx/update_time.sh
+```
+
+Проверка:
+
+```bash
+curl http://localhost
+```
