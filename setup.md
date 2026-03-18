@@ -21,3 +21,11 @@
 - sudo systemctl restart nginx
 - curl http://localhost
 
+## Настройка firewall
+- sudo apt install ufw -y - установка ufw (удобный инструмент для работы в ubuntu)
+- sudo ufw allow 22/tcp - добавляем в список правил разрешенный порт (SSH)
+- sudo ufw allow 80/tcp - добавляем в список правил порт (HTTP)
+- sudo ufw allow 443/tcp - добавляем в список правил порт (HTTPS)
+- sudo ufw enable - активация firewall
+- sudo ufw status verbose - проверка статуса
+
