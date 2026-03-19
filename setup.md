@@ -196,11 +196,14 @@ curl http://localhost
 #!/bin/bash
 
 DATE=$(date -u +"%Y-%m-%d_%H-%M-%S")
-tar -czf /home/sp1el/devops-ts/backups/nginx_backup_$DATE.tar.gz /etc/nginx```
+tar -czf /home/sp1el/devops-ts/backups/nginx_backup_$DATE.tar.gz /etc/nginx
+```
 
 ```text
 Скрипт запускается автоматические через cron
 для этого вводим команду crontab -e
-и добавляем строку:```
+и добавляем строку:
+```
 ```bash
-0 1 * * 1 /home/sp1el/devops-ts/scripts/backup_nginx.sh```
+0 1 * * 1 /home/sp1el/devops-ts/scripts/backup_nginx.sh
+```
