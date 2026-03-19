@@ -1,4 +1,3 @@
-````md
 # DevOps TechTask
 
 Техническое задание по настройке **Nginx, Firewall, HTTPS, backup и базовой автоматизации**.
