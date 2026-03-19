@@ -207,3 +207,37 @@ tar -czf /home/sp1el/devops-ts/backups/nginx_backup_$DATE.tar.gz /etc/nginx
 ```bash
 0 1 * * 1 /home/sp1el/devops-ts/scripts/backup_nginx.sh
 ```
+
+## Запуск nginx от отдельного пользователя
+
+Создание системного пользователя
+
+```bash
+sudo useradd --system --nocreate-home --shell /usr/sbin/nologin nginxuser
+```
+
+Изменение пользователя в конфигурации nginx
+
+```text
+Было: user nginx;
+Стало: user nginxuser;
+```
+
+Проверка конфигурации
+
+```bash
+sudo nginx -t
+```
+
+Перезапуск nginx
+
+```bash
+sudo systemctl restart nginx
+```
+
+Проверка процессов
+
+```bash
+ps -eo user,pid,cmd | grep nginx
+```
+
