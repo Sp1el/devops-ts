@@ -15,7 +15,7 @@
    - backup конфигурации nginx по расписанию
    - запуск nginx от отдельного пользователя
    - подключение к GitHub по SSH
-
+   - Dockerfile для контейнера nginx
 ---
 
 ## Что реализовано
@@ -29,6 +29,7 @@
 -  Настроен запуск **backup через cron**
 -  Worker-процессы nginx настроены на запуск от отдельного пользователя
 -  Настроено подключение к GitHub через **SSH**
+-  Написан **Dockerfile** для nginx
 -  Проект оформлен и задокументирован
 
 ---
@@ -176,6 +177,31 @@ ps -eo user,pid,cmd | grep nginx
 
 ---
 
+## Docker
+
+Создан Dockerfile для запуска nginx в контейнере.
+
+Сборка образа:
+
+```bash
+cd ~/devops-ts
+sudo docker build -t my-nginx -f docker/Dockerfile .
+```
+
+Запуск контейнера:
+
+```bash
+sudo docker build -t my-nginx -f docker/Dockerfile .
+```
+
+Проверка:
+
+```bash
+curl http://localhost:8080
+```
+
+---
+
 ## Структура проекта
 
 ```text
@@ -186,10 +212,12 @@ devops-ts/
 ├── theory.md
 ├── nginx/
 │   ├── index.html
-│   ├── nginx.conf
-│   └── update_time.sh
+│   ├── update_time.sh
+│   └── nginx.conf
 ├── scripts/
 │   └── backup_nginx.sh
+├── docker/
+│   └── Dockerfile
 └── backups/
 ```
 

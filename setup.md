@@ -241,3 +241,38 @@ sudo systemctl restart nginx
 ps -eo user,pid,cmd | grep nginx
 ```
 
+## Docker
+
+Установка Docker
+
+```bash
+sudo apt install docker -y
+sudo systemctl start docker
+sudo systemctl enable docker
+```
+
+Проверка
+
+```bash
+sudo docker run hello-world
+```
+
+Сборка образа
+
+```bash
+cd ~/devops-ts
+sudo docker build -t my-nginx -f docker/Dockerfile .
+```
+
+Запуск контейнера
+
+```bash
+sudo docker run -d -p 8080:80 my-nginx
+```
+
+Проверка
+```bash
+curl http://localhost:8080
+```
+
+
